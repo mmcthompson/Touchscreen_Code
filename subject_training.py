@@ -10,52 +10,26 @@ import time
 from random import randrange, uniform
 import datetime
 
+#upper left is really lower left
+#no targets announced
+#the labels are obnoxious
+#Reset tone is too long/sensitive again
+#You didn't give them dummy F1 and F2 values
+#problems with the floats for the inputs. Working on it, try again.
+#Also, upper left is 0,0
 
-def onupperleft(event):
-	print("upper left click detected")
-	pos = event.Position
-	print(pos)
-	
-	#Input limited to upper 1/12 of the screen. Otherwise, loop essentially continues
-	if ((pos[0]) >= (2*1920/3)) and ((pos[1]) >= (3*1080/4)):
-		#Click is in lower-right-hand corner, allow to proceed 
-		winsound.PlaySound('Break_cue_right.wav',winsound.SND_FILENAME)
-		
-		#Break after one input in the correct area
-		ctypes.windll.user32.PostQuitMessage(0)
-		#print (pos)
-	else:
-		print ("incorrect reset")
-	
-	return True
-
-def onupperleft(event):
-	print("upper left click detected")
-	pos = event.Position
-	print(pos)
-	
-	#Input limited to upper 1/12 of the screen. Otherwise, loop essentially continues
-	if ((pos[0]) >= (2*1920/3)) and ((pos[1]) >= (3*1080/4)):
-		#Click is in lower-right-hand corner, allow to proceed 
-		winsound.PlaySound('Break_cue_right.wav',winsound.SND_FILENAME)
-		
-		#Break after one input in the correct area
-		ctypes.windll.user32.PostQuitMessage(0)
-		#print (pos)
-	else:
-		print ("incorrect reset")
-	
-	return True
 
 def onlowerright(event):
-	print("lower right click detected")
+
 	pos = event.Position
 	print(pos)
 	
 	#Input limited to upper 1/12 of the screen. Otherwise, loop essentially continues
 	if ((pos[0]) >= (2*1920/3)) and ((pos[1]) >= (3*1080/4)):
 		#Click is in lower-right-hand corner, allow to proceed 
-		winsound.PlaySound('Break_cue_right.wav',winsound.SND_FILENAME)
+		#winsound.PlaySound('Break_cue_right.wav',winsound.SND_FILENAME)
+		#Pass formants into shorter-cued matlab program
+		eng.formant_synthesize_playback_3ms_tone(0,0,nargout=0)
 		
 		#Break after one input in the correct area
 		ctypes.windll.user32.PostQuitMessage(0)
@@ -66,14 +40,16 @@ def onlowerright(event):
 	return True
 
 def onupperright(event):
-	print("upper right click detected")
+
 	pos = event.Position
 	print(pos)
 	
 	#Input limited to upper 1/12 of the screen. Otherwise, loop essentially continues
 	if ((pos[0]) >= (2*1920/3)) and ((pos[1]) <= (1*1080/4)):
 		#Click is in lower-right-hand corner, allow to proceed 
-		winsound.PlaySound('Break_cue_right.wav',winsound.SND_FILENAME)
+		#winsound.PlaySound('Break_cue_right.wav',winsound.SND_FILENAME)
+		#Pass formants into shorter-cued matlab program
+		eng.formant_synthesize_playback_3ms_tone(0,0,nargout=0)
 		
 		#Break after one input in the correct area
 		ctypes.windll.user32.PostQuitMessage(0)
@@ -84,14 +60,16 @@ def onupperright(event):
 	return True
 
 def onupperleft(event):
-	print("upper left click detected")
+
 	pos = event.Position
 	print(pos)
 	
 	#Input limited to upper 1/12 of the screen. Otherwise, loop essentially continues
-	if ((pos[0]) <= (1*1920/3)) and ((pos[1]) >= (3*1080/4)):
+	if ((pos[0]) <= (1*1920/3)) and ((pos[1]) <= (1*1080/4)):
 		#Click is in lower-right-hand corner, allow to proceed 
-		winsound.PlaySound('Break_cue_right.wav',winsound.SND_FILENAME)
+#		winsound.PlaySound('Break_cue_right.wav',winsound.SND_FILENAME)
+		#Pass formants into shorter-cued matlab program
+		eng.formant_synthesize_playback_3ms_tone(float(0),float(0),nargout=0)
 		
 		#Break after one input in the correct area
 		ctypes.windll.user32.PostQuitMessage(0)
@@ -102,21 +80,23 @@ def onupperleft(event):
 	return True
 
 def onlowerleft(event):
-	print("lower left click detected")
+
 	pos = event.Position
 	print(pos)
 	
 	#Input limited to upper 1/12 of the screen. Otherwise, loop essentially continues
-	if ((pos[0]) <= (1*1920/3)) and ((pos[1]) <= (1*1080/4)):
+	if ((pos[0]) <= (1*1920/3)) and ((pos[1]) <= (3*1080/4)):
 		#Click is in lower-right-hand corner, allow to proceed 
-		winsound.PlaySound('Break_cue_right.wav',winsound.SND_FILENAME)
+		#winsound.PlaySound('Break_cue_right.wav',winsound.SND_FILENAME)
+		#Pass formants into shorter-cued matlab program
+		eng.formant_synthesize_playback_3ms_tone(0,0,nargout=0)
 		
 		#Break after one input in the correct area
 		ctypes.windll.user32.PostQuitMessage(0)
 		#print (pos)
 	else:
 		print ("incorrect reset")
-	
+
 	return True	
 	
 	
@@ -125,9 +105,7 @@ def hook_setup_upperleft():
 	
 	#Create hook manager
 	hm = pyHook.HookManager()
-	
-	print("starting corner callback")
-	
+		
 	hm.MouseAll = onupperleft
 	
 	#Set the hook
@@ -137,6 +115,9 @@ def hook_setup_upperleft():
 	hm.HookKeyboard()
 	
 	pythoncom.PumpMessages()
+
+	hm.UnhookMouse()
+	hm.UnhookKeyboard()
 	return hm
 
 def hook_setup_upperright():
@@ -145,9 +126,7 @@ def hook_setup_upperright():
 	
 	#Create hook manager
 	hm = pyHook.HookManager()
-	
-	print("starting corner callback")
-	
+		
 	#play the alternate oncluc which only accepts lower-right-hand reset presses
 	hm.MouseAll = onupperright
 	
@@ -158,6 +137,9 @@ def hook_setup_upperright():
 	hm.HookKeyboard()
 	
 	pythoncom.PumpMessages()
+
+	hm.UnhookMouse()
+	hm.UnhookKeyboard()
 	return hm
 	
 def hook_setup_lowerleft():
@@ -166,8 +148,6 @@ def hook_setup_lowerleft():
 	
 	#Create hook manager
 	hm = pyHook.HookManager()
-	
-	print("starting corner callback")
 	
 	#play the alternate oncluc which only accepts lower-right-hand reset presses
 	hm.MouseAll = onlowerleft
@@ -179,6 +159,9 @@ def hook_setup_lowerleft():
 	hm.HookKeyboard()
 	
 	pythoncom.PumpMessages()
+
+	hm.UnhookMouse()
+	hm.UnhookKeyboard()
 	return hm
 
 def hook_setup_lowerright():
@@ -187,8 +170,6 @@ def hook_setup_lowerright():
 	
 	#Create hook manager
 	hm = pyHook.HookManager()
-	
-	print("starting corner callback")
 	
 	#play the alternate oncluc which only accepts lower-right-hand reset presses
 	hm.MouseAll = onlowerright
@@ -200,38 +181,25 @@ def hook_setup_lowerright():
 	hm.HookKeyboard()
 	
 	pythoncom.PumpMessages()
+	
+	hm.UnhookMouse()
+	hm.UnhookKeyboard()
 	return hm
 
 
 	
 if __name__== '__main__':
 	
-	#Start off by calling the hook a few times to get rid of the lag at the beginning
-	hm_temp = hook_warmup()
-	
-	#Run a test block
-	test_session(3,24)
-	
-	#Wait for key press for next trial block to continue
-	print("Press any key to continue")
-	msvcrt.getch()
-	#Give me 5 seconds to switch back to the waiting screen
-	time.sleep(5)
+	for i in range(1,4):
+		print("requesting upper left")
+		hook_setup_upperleft()
 		
-	for cur_block in range (0,full_trial_blocks):
-		#Calling the hook once per trial in trial block
-		train_session(3,120)
+		print("requesting upper right")
+		hook_setup_upperright()
 		
-		#Wait for key press for next trial block to continue
-		print("Press any key to continue")
-		msvcrt.getch()
-		#Give me 5 seconds to switch back to the waiting screen
-		time.sleep(5)
+		print("requesting lower left")
+		hook_setup_lowerleft()
+		
+		print("requesting lower right")
+		hook_setup_lowerright()
 	
-	for cur_short_block in range (0,5):
-		#Alternate between training and testing for the final block
-		#run a training session
-		train_session(3,24)
-		
-		#run a test session
-		test_session(5,5)
